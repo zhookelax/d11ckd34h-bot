@@ -117,6 +117,7 @@ ${nwn}
 ║├ ${prefix}modo1
 ║├ ${prefix}modo2
 ║├ ${prefix}antiprivado
+║├ ${prefix}restringido
 ║├ ${prefix}predit
 ║├ ${prefix}nombrebot
 ║├ ${prefix}midueño
