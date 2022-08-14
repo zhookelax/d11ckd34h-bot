@@ -9,7 +9,7 @@ exports.PanelMenu = (prefix, pushname, actividad, role, monospace, nwn, isPrremi
 ╔═══════════
 ║❂ Tiempo activo : ${actividad}
 ║❂ Version del bot : ${MyPkg.version}
-║❂ Dueño : ${MyInfo.CoCreador}
+║❂ Dueño : < ${MyInfo.Propietario} />
 ║❂ Prefijo : 「  ${prefix}  」
 ║❂ Cliente : ${pushname}️
 ║❂ Premium : ${isPrremium ? "Si" : "No"}
