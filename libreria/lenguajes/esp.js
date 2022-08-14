@@ -4,7 +4,8 @@ const MyPkg = require('../../package.json')
 const MyInfo = JSON.parse(fs.readFileSync('./informacion.json'))
 
 exports.PanelMenu = (prefix, pushname, actividad, role, monospace, nwn, isPrremium) => {
-  return `${monospace}< [ ${MyInfo.NombreDelBot} ] >${monospace}
+  return `< [ ${monospace + MyInfo.NombreDelBot + monospace} ] >
+
 ╔═══════════
 ║❂ Tiempo activo : ${actividad}
 ║❂ Version del bot : ${MyPkg.version}
@@ -62,8 +63,7 @@ ${nwn}
 ║╰——————————
 ╚═══════════
 ╔═══════════
-║ _PASATIEMPO_
-║ _& JUEGOS :_
+║ _PASATIEMPO :_
 ║╭——————————
 ║├ ${prefix}quien
 ║├ ${prefix}ruleta
@@ -115,10 +115,11 @@ ${nwn}
 ╔═══════════
 ║ _CMDS DUEÑO :_
 ║╭——————————
+║├ ${prefix}desactivarbot
+║├ ${prefix}activarbot
 ║├ ${prefix}modo1
 ║├ ${prefix}modo2
 ║├ ${prefix}antiprivado
-║├ ${prefix}restringido
 ║├ ${prefix}predit
 ║├ ${prefix}nombrebot
 ║├ ${prefix}midueño
@@ -131,6 +132,8 @@ ${nwn}
 ║├ ${prefix}bc
 ║├ ${prefix}banear
 ║├ ${prefix}quitarbaneo
+║├ ${prefix}darprem
+║├ ${prefix}quitarprem
 ║├ ${prefix}.
 ║├ ${prefix}lenguaje
 ║╰┬> _ACTIVADORES_
@@ -201,6 +204,8 @@ exports.PanelMenu2 = (prefix, monospace) => {
 ║➣ ${prefix}play2
 ║➣ ${prefix}ytmp3
 ║➣ ${prefix}ytmp4
+║➣ ${prefix}yta
+║➣ ${prefix}ytv
 ║➣ ${prefix}fbdl
 ║➣ ${prefix}tiktokdl
 ║
@@ -241,6 +246,7 @@ exports.MenuArte = (prefix, monospace) => {
 ║☞ ${prefix}gameover
 ║☞ ${prefix}pornhub
 ╚═══════════
+~ᴾᵘᵉᵈᵉⁿ ᵈᵃʳ ᶦᵈᵉᵃˢ ᵖᵃʳᵃ ᵐᵃ́ˢ ᶜᵒᵐᵃⁿᵈᵒˢ ᵈᵉ ˡᵒᵍᵒˢ~
 `
 }
 exports.AniMenu = (prefix, monospace) => {
@@ -312,8 +318,8 @@ exports.Wlc1 = () => {
 exports.Wlc2 = () => {
   return `Creador`
 }
-exports.Wlc3 = (num, metadata, fechaCompleta, gpdesc, nwn) => {
-  return `⚡ *Bienvenid@ @${num.split("@")[0]} a este grandioso grupo :*\n${metadata.subject}\n⚡ *Fecha de ingreso : ${fechaCompleta}*\n⚡ _*Espero y te agrade tu estancia aqui, no olvides respetar a los participantes y las reglas*_ ;)\n\n*Normas del grupo actualmente :* \n${nwn}\n${gpdesc}`
+exports.Wlc3 = (num, metadata, gpdesc, nwn) => {
+  return `⚡ *Bienvenid@ @${num.split("@")[0]} a este grandioso grupo!*\n🍷 _*Espero y te agrade tu estancia aqui, no olvides respetar a los participantes y las reglas*_ ;)\n\n📜 *Normas del grupo actualmente :* \n${nwn}\n${gpdesc}`
 }
 exports.Wlc4 = () => {
   return `ADIOS... 😔`
@@ -547,16 +553,16 @@ exports.CerrarGp1 = (UwU, pushname) => {
   return `*El grupo se cerrará en ${UwU}*\n_Accion ejecutada por : ${pushname}_`
 }
 exports.CerrarGp2 = () => {
-  return `*[ Se cerro el grupo con exito ✓ ]*`
+  return `🔒 *[ GRUPO CERRADO ]* 🔒\n_ᴬʰᵒʳᵃ ˢᵒˡᵒ ˡᵒˢ ᵃᵈᵐᶦⁿᶦˢᵗʳᵃᵈᵒʳᵉˢ ᵖᵘᵉᵈᵉⁿ ᵉⁿᵛᶦᵃʳ ᵐᵉⁿˢᵃʲᵉˢ_`
 }
 exports.AbrirGp = () => {
-  return `*[ Grupo abierto ✓ ]*`
+  return `🔓 *[ GRUPO ABIERTO ]* 🔓\n_ᴬʰᵒʳᵃ ᵗᵒᵈᵒˢ ˡᵒˢ ᵖᵃʳᵗᶦᶜᶦᵖᵃⁿᵗᵉˢ ᵖᵘᵉᵈᵉⁿ ᵉⁿᵛᶦᵃʳ ᵐᵉⁿˢᵃʲᵉˢ_`
 }
 exports.NomGp0 = () => {
   return `*[ ! ] máximo de carácteres es 25*`
 }
-exports.NomGp1 = (groupName) => {
-  return `Se cambio el nombre del grupo con éxito ✓\nNombre nuevo : [ ${groupName} ]`
+exports.NomGp1 = (annu) => {
+  return `✍️ *[ ASUNTO DEL GRUPO CAMBIADO ]* 🤳\n\nAsunto nuevo: _${annu.subject}_\n`
 }
 exports.DesGp0 = () => {
   return `*[ ! ] Máximo de carácteres 512*`
