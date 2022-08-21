@@ -1,15 +1,16 @@
-const fetch = require('node-fetch')
-const chalk = require('chalk')
-const axios = require('axios')
-const crypto = require('crypto')
-const cfonts = require('cfonts')
-const spin = require('spinnies')
-const moment = require('moment-timezone')
-const { sizeFormatter } = require('human-readable')
-const Crypto = require('crypto')
-const fs = require('fs')
-const util = require('util')
+const chalk = require('chalk');
+const axios = require('axios');
+const crypto = require('crypto');
+const spin = require('spinnies');
+const { sizeFormatter } = require('human-readable');
+const fs = require('fs');
+const util = require('util');
 const { fromBuffer } = require('file-type');
+const moment = require("moment-timezone");
+
+const color = (text, color) => {
+    return !color ? chalk.green(text) : chalk.keyword(color)(text)
+}
 
 const spinner = { 
   "interval": 120,
@@ -67,14 +68,6 @@ const runtime = function(seconds) {
 	return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
-const getGroupAdmins = (participantes) => {
-    var admins = []
-    for (let i of participantes) {
-        i.admin === "admin" ? admins.push(i.id) : ''
-    }
-    return admins
-}
-
 const formatp = sizeFormatter({
     std: 'JEDEC', //'SI' = default | 'IEC' | 'JEDEC'
     decimalPlaces: 2,
@@ -82,23 +75,8 @@ const formatp = sizeFormatter({
     render: (literal, symbol) => `${literal} ${symbol}B`,
 })
 
-const getTime = (format, date) => {
-	if (date) {
-		return moment(date).locale('pe').format(format)
-	} else {
-		return moment.tz('America/Lima').locale('pe').format(format)
-	}
-}
-
 const sleep = async (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-const clockString = function(seconds) {
-    let h = isNaN(seconds) ? '--' : Math.floor(seconds % (3600 * 24) / 3600)
-    let m = isNaN(seconds) ? '--' : Math.floor(seconds % 3600 / 60)
-    let s = isNaN(seconds) ? '--' : Math.floor(seconds % 60)
-    return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
 }
 
 const fetchJson = async (url, options) => {
@@ -137,28 +115,13 @@ const getBuffer = async (url, options) => {
 	}
 }
 
-const jsonformat = (string) => {
-    return JSON.stringify(string, null, 2)
-}
-
-const logic = (check, inp, out) => {
-	if (inp.length !== out.length) throw new Error('La entrada y la salida deben tener la misma longitud') //traducido :v
-	for (let i in inp)
-		if (util.isDeepStrictEqual(check, inp[i])) return out[i]
-	return null
-}
-
-const parseMention = (text = '') => {
-    return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')
+const getRandom = (ext) => {
+    return `${Math.floor(Math.random() * 10000)}${ext}`
 }
 
 const createSerial = (size) => {
             return crypto.randomBytes(size).toString('hex').slice(0, size);
         };
-
-const getRandom = (ext) => {
-    return `${Math.floor(Math.random() * 10000)}${ext}`
-}
 
 const pickRandom = (list) => {
   return list[Math.floor(Math.random() * list.length)]
@@ -174,7 +137,9 @@ const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-module.exports = { start, success, close, format, runtime, getGroupAdmins, formatp, getTime, sleep, clockString, fetchJson, getBuffer, jsonformat, logic, parseMention, getRandom, createSerial, pickRandom, isUrl, getRandomIntInclusive }
+const mytime = moment(Date.now()).tz('America/Lima').locale('pe').format('DD/MM/YY HH:mm:ss')//Zona horaria 
+
+module.exports = { color, start, success, close, format, runtime, formatp, sleep, fetchJson, getBuffer, getRandom, createSerial, pickRandom, isUrl, getRandomIntInclusive, mytime }
 
 //============Auto Actualización :v=======================//
 let file = require.resolve(__filename)

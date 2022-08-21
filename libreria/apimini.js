@@ -1,7 +1,7 @@
-const fs = require('fs')
-const axios = require('axios')
-const cheerio = require('cheerio')
-const FormData = require("form-data")
+const fs = require('fs');
+const axios = require('axios');
+const cheerio = require('cheerio');
+const FormData = require("form-data");
 
 function TelegraPh (Path) {
 	return new Promise (async (resolve, reject) => {
@@ -42,42 +42,36 @@ async function UploadFile (input) {
 	})
 }
 
-function webp2mp4File (path) {
-	return new Promise((resolve, reject) => {
-		 const form = new FormData()
-		 form.append('new-image-url', '')
-		 form.append('new-image', fs.createReadStream(path))
-		 axios({
-			  method: 'post',
-			  url: 'https://s6.ezgif.com/webp-to-mp4',
-			  data: form,
-			  headers: {
-				   'Content-Type': `multipart/form-data; boundary=${form._boundary}`
-			  }
-		 }).then(({ data }) => {
-			  const bodyFormThen = new FormData()
-			  const $ = cheerio.load(data)
-			  const file = $('input[name="file"]').attr('value')
-			  bodyFormThen.append('file', file)
-			  bodyFormThen.append('convert', "Convert WebP to MP4!")
-			  axios({
-				   method: 'post',
-				   url: 'https://ezgif.com/webp-to-mp4/' + file,
-				   data: bodyFormThen,
-				   headers: {
-						'Content-Type': `multipart/form-data; boundary=${bodyFormThen._boundary}`
-				   }
-			  }).then(({ data }) => {
-				   const $ = cheerio.load(data)
-				   const result = 'https:' + $('div#output > p.outfile > video > source').attr('src')
-				   resolve({
-						status: true,
-						message: "Agradecido con MRHRTZ :3",
-						result: result
-				   })
-			  }).catch(reject)
-		 }).catch(reject)
-	})
+async function floNime(medianya, options = {}) {
+const { ext } = await fromBuffer(medianya) || options.ext
+        var form = new FormData()
+        form.append('file', medianya, 'tmp.'+ext)
+        jsonnya = await fetch('https://flonime.my.id/upload', {
+                method: 'POST',
+                body: form
+        })
+        .then((response) => response.json())
+              .then((result) => {
+                  return result
+              })
+              .catch(e => {
+                  return e
+              })
+        return jsonnya
 }
 
-module.exports = { UploadFile, TelegraPh, webp2mp4File }
+function styletext(teks) {
+    return new Promise((resolve, reject) => {
+        axios.get('http://qaz.wtf/u/convert.cgi?text='+teks)
+        .then(({ data }) => {
+            let $ = cheerio.load(data)
+            let hasil = []
+            $('table > tbody > tr').each(function (a, b) {
+                hasil.push({ name: $(b).find('td:nth-child(1) > span').text(), result: $(b).find('td:nth-child(2)').text().trim() })
+            })
+            resolve(hasil)
+        }).catch((err) => reject(err))
+    })
+}
+
+module.exports = { UploadFile, TelegraPh, floNime, styletext }

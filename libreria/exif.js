@@ -1,19 +1,18 @@
 
 //Agradecido con los autores uwu
 
-const fs = require('fs')
-const path = require("path")
-const axios = require("axios")
-const { tmpdir } = require("os")
-const Crypto = require("crypto")
-const ff = require('fluent-ffmpeg')
-const webp = require("node-webpmux")
-
+const fs = require('fs');
+const path = require("path");
+const axios = require("axios");
+const { tmpdir } = require("os");
+const crypto = require("crypto");
+const ff = require('fluent-ffmpeg');
+const webp = require("node-webpmux");
 
 async function imageToWebp (media) {
 
-    const tmpFileOut = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
-    const tmpFileIn = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.jpg`)
+    const tmpFileOut = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileIn = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.jpg`)
 
     fs.writeFileSync(tmpFileIn, media)
 
@@ -39,8 +38,8 @@ async function imageToWebp (media) {
 
 async function videoToWebp (media) {
 
-    const tmpFileOut = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
-    const tmpFileIn = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.mp4`)
+    const tmpFileOut = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileIn = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.mp4`)
 
     fs.writeFileSync(tmpFileIn, media)
 
@@ -77,8 +76,8 @@ async function videoToWebp (media) {
 
 async function writeExifImg (media, metadata) {
     let wMedia = await imageToWebp(media)
-    const tmpFileIn = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
-    const tmpFileOut = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileIn = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileOut = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
     fs.writeFileSync(tmpFileIn, wMedia)
 
     if (metadata.packname || metadata.author) {
@@ -98,8 +97,8 @@ async function writeExifImg (media, metadata) {
 
 async function writeExifVid (media, metadata) {
     let wMedia = await videoToWebp(media)
-    const tmpFileIn = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
-    const tmpFileOut = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileIn = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileOut = path.join(tmpdir(), `${crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
     fs.writeFileSync(tmpFileIn, wMedia)
 
     if (metadata.packname || metadata.author) {
@@ -115,6 +114,44 @@ async function writeExifVid (media, metadata) {
         await img.save(tmpFileOut)
         return tmpFileOut
     }
+}
+
+function webp2mp4File (path2) {
+	return new Promise((resolve, reject) => {
+		 const form = new FormData()
+		 form.append('new-image-url', '')
+		 form.append('new-image', fs.createReadStream(path2))
+		 axios({
+			  method: 'post',
+			  url: 'https://s6.ezgif.com/webp-to-mp4',
+			  data: form,
+			  headers: {
+				   'Content-Type': `multipart/form-data; boundary=${form._boundary}`
+			  }
+		 }).then(({ data }) => {
+			  const bodyFormThen = new FormData()
+			  const $ = cheerio.load(data)
+			  const file = $('input[name="file"]').attr('value')
+			  bodyFormThen.append('file', file)
+			  bodyFormThen.append('convert', "Convert WebP to MP4!")
+			  axios({
+				   method: 'post',
+				   url: 'https://ezgif.com/webp-to-mp4/' + file,
+				   data: bodyFormThen,
+				   headers: {
+						'Content-Type': `multipart/form-data; boundary=${bodyFormThen._boundary}`
+				   }
+			  }).then(({ data }) => {
+				   const $ = cheerio.load(data)
+				   const result = 'https:' + $('div#output > p.outfile > video > source').attr('src')
+				   resolve({
+						status: true,
+						message: "Agradecido con MRHRTZ :3",
+						result: result
+				   })
+			  }).catch(reject)
+		 }).catch(reject)
+	})
 }
 
 function convertSticker(base64, author, pack){
@@ -135,10 +172,25 @@ axios('https://sticker-api-tpe3wet7da-uc.a.run.app/prepareWebp', {
  }) 
 }
 
+async function addExif(webpSticker, packname, author, categories = [''], extra = {}) {
+  const img = new webp.Image();
+  const stickerPackId = crypto.randomBytes(32).toString('hex');
+  const json = { 'sticker-pack-id': stickerPackId, 'sticker-pack-name': packname, 'sticker-pack-publisher': author, 'emojis': categories, ...extra };
+  let exifAttr = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x41, 0x57, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0x00, 0x00, 0x00]);
+  let jsonBuffer = Buffer.from(JSON.stringify(json), 'utf8');
+  let exif = Buffer.concat([exifAttr, jsonBuffer]);
+  exif.writeUIntLE(jsonBuffer.length, 14, 4);
+  await img.load(webpSticker)
+  img.exif = exif
+  return await img.save(null)
+}
+
 module.exports = {
 imageToWebp, 
 videoToWebp, 
 writeExifImg, 
 writeExifVid,
+webp2mp4File,
 convertSticker,
+addExif
 }
