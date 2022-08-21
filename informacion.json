@@ -12,7 +12,8 @@
 	"Propietario": "Matt_Mdz",
 	"MyPais": "51",
 	"MiembrosMinimoEnUnGrupo": "3",
-	"LimiteParaUsarComandos": "30",
+	"LimiteParaUsarComandos": "20",
 	"TusRedesSociales": "[ > ] Canal de Youtube:\n- https://youtube.com/channel/UC_Pp8pT9vbT15k5_-i6oseA\n\n[ f ] Página de Facebook:\n- https://fb.watch/b7pj-i5ejP/\n\n[Ꮄ] Tiktok:\n- https://vm.tiktok.com/ZMLjAbySN/\n\n*_Muchisimas gracias por tu apoyo mi king!!!_* :3",
-	"CtrlG": ""
+	"ApiRest": "https://latam-api.vercel.app/",
+        "CtrlG": ""
 }
