@@ -59,7 +59,6 @@ ${nwn}
 ║├ ${prefix}creador
 ║├ ${prefix}infogrupo
 ║├ ${prefix}admins
-║├ ${prefix}grupolink
 ║├ ${prefix}catalogo
 ║├ ${prefix}horario
 ║├ ${prefix}keyaudio
@@ -93,6 +92,7 @@ ${nwn}
 ║├ ${prefix}editnamegp
 ║├ ${prefix}editdesgp
 ║├ ${prefix}fotogrupo
+║├ ${prefix}grupolink
 ║├ ${prefix}invocar
 ║├ ${prefix}darpoder
 ║├ ${prefix}quitarpoder
