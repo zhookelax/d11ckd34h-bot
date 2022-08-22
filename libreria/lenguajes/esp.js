@@ -207,6 +207,8 @@ exports.PanelMenu2 = (prefix, monospace) => {
 ╠═> DESCARGADOR
 ║➣ ${prefix}mediafire
 ║➣ ${prefix}play
+║➣ ${prefix}audio
+║➣ ${prefix}audio2
 ║➣ ${prefix}play2
 ║➣ ${prefix}ytmp3
 ║➣ ${prefix}ytmp4
@@ -274,8 +276,6 @@ exports.AniMenu = (prefix, monospace) => {
 ║圆 ${prefix}facehd
 ║圆 ${prefix}aniwpp
 ║圆 ${prefix}neko
-║圆 ${prefix}neko2
-║圆 ${prefix}neko3
 ║圆 ${prefix}snime
 ║圆 ${prefix}otakutest
 ╚═══════════
