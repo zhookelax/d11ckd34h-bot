@@ -145,7 +145,7 @@ ${nwn}
 ║├ ${prefix}chatbot
 ║├ ${prefix}banchat
 ║╰┬> ~MODO KUAKER~
-║ ~PSDT- Estos comandos son de virustraba~
+║ ~PSDT: Estos comandos son de virustraba~
 ║ ~ten cuidado al usarlos!~
 ║╭╯
 ║├ ${prefix}c1
